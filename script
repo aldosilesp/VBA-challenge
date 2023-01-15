@@ -1,0 +1,130 @@
+Sub Stocks()
+
+    Dim Ticker As String
+    
+    Dim Volume As Double
+    
+    Dim CurrentRow As Integer
+    
+    Dim Counter As Integer
+    
+    Dim OpeningPrice As Double
+    
+    Dim ClosingPrice As Double
+    
+    Dim MaxIncrease As Double
+    
+    Dim MaxDecrease As Double
+    
+    Dim MaxVolume As Double
+    
+    Dim TickerMaxIncrease As String
+    
+    Dim TickerMaxDecrease As String
+    
+    Dim TickerMaxVolume As String
+    
+    Dim Current As Worksheet
+    
+    Volume = 0
+    
+    CurrentRow = 2
+    
+    Counter = 0
+    
+    OpeningPrice = 0
+    
+    ClosingPrice = 0
+    
+    MaxIncrease = 0
+    
+    MaxDecrease = 0
+    
+    MaxVolume = 0
+    
+    For Each Current In Worksheets
+    
+        For I = 2 To Cells(Rows.Count, 1).End(xlUp).Row
+        
+            If Cells(I, 1).Value <> Cells(I + 1, 1).Value Then
+            
+            ' Change Ticker
+            
+            Ticker = Cells(I, 1).Value
+            
+            Volume = Volume + Cells(I, 7).Value
+            
+            ClosingPrice = Cells(I, 6).Value
+        
+            Cells(CurrentRow, 9).Value = Ticker
+            Cells(CurrentRow, 12).Value = Volume
+            Cells(CurrentRow, 10).Value = ClosingPrice - OpeningPrice
+            Cells(CurrentRow, 11).Value = (ClosingPrice - OpeningPrice) / OpeningPrice
+            CurrentRow = CurrentRow + 1
+            Counter = 0
+            Volume = 0
+            OpeningPrice = 0
+            ClosingPrice = 0
+        
+            ' Same Ticker
+            
+            Else
+            
+                Volume = Volume + Cells(I, 7).Value
+                
+                Counter = Counter + 1
+                
+                    If Counter = 1 Then
+                    
+                        OpeningPrice = Cells(I, 3).Value
+                        
+                    Else
+                    
+                        OpeningPrice = OpeningPrice
+                        
+                        End If
+            
+            End If
+            
+            Next I
+            
+        For j = 2 To Cells(Rows.Count, 9).End(xlUp).Row
+        
+            If MaxIncrease < Cells(j, 11).Value Then
+            
+                MaxIncrease = Cells(j, 11).Value
+                
+                TickerMaxIncrease = Cells(j, 9).Value
+                
+            End If
+            
+            If MaxDecrease > Cells(j, 11).Value Then
+            
+                MaxDecrease = Cells(j, 11).Value
+                
+                TickerMaxDecrease = Cells(j, 9).Value
+                
+            End If
+                
+            If MaxVolume < Cells(j, 12).Value Then
+            
+                MaxVolume = Cells(j, 12).Value
+                
+                TickerMaxVolume = Cells(j, 9).Value
+                
+            End If
+                
+        Next j
+        
+        Cells(2, 16).Value = TickerMaxIncrease
+        Cells(3, 16).Value = TickerMaxDecrease
+        Cells(4, 16).Value = TickerMaxVolume
+        Cells(2, 17).Value = MaxIncrease
+        Cells(3, 17).Value = MaxDecrease
+        Cells(4, 17).Value = MaxVolume
+        
+        MsgBox Current.Name
+        
+        Next
+    
+End Sub
